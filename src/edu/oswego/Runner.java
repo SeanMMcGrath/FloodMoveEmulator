@@ -1,6 +1,7 @@
 package edu.oswego;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
 /**
@@ -37,17 +38,39 @@ public class Runner extends RecursiveTask<Puzzle> {
             Runner r = new Runner(p, depth + 1);
             toInvoke.add(r);
         }
-        invokeAll(toInvoke);
+
+        //invoke
+        List<Runner> results = (List<Runner>) invokeAll(toInvoke);
+        //find and return best result
+        return getBest(results).board;
+    }
+
+    /**
+     * takes a list of results and finds the one with the largest flood size, prioritizing smaller depths
+     * @param results - list of results
+     * @return - best result
+     */
+    private Runner getBest(List<Runner> results){
         Runner best = null;
-        for (Runner r : toInvoke) {//get the runner with the largest flood size
+        int shallowest = -1;
+
+        for (Runner r : results) {//get the runner with the largest flood size
             if (best == null) {
                 best = r;
+                shallowest = r.depth;
             } else {
-                if (best.board.getMainPoints().size() < r.board.getMainPoints().size()) {
+                if(shallowest > r.depth) {
+                    //smaller depth so set as best
                     best = r;
+                    shallowest = r.depth;
+                } else if(shallowest == r.depth) {
+                    if (best.board.getMainPoints().size() < r.board.getMainPoints().size()) {//same depth so check if better size
+                        best = r;
+                    }
                 }
+                //if shallowest < depth then ignore it since its an inferior result
             }
         }
-        return best.board;
+        return best;
     }
 }

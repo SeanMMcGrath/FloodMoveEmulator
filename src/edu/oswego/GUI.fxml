@@ -7,7 +7,6 @@
 
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.text.Font?>
-<?import java.net.URL?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml" fx:id="Container" maxHeight="-Infinity"
             maxWidth="-Infinity" minHeight="700.0" minWidth="700.0"
             prefHeight="700.0" prefWidth="700.0" fx:controller="edu.oswego.Controller">
@@ -41,7 +40,4 @@
     <TextField fx:id="size" layoutX="120" layoutY="55.0" prefHeight="20" prefWidth="30" text="7"/>
     <GridPane fx:id="colorGrid" alignment="CENTER" layoutX="20.0" layoutY="100.0" prefHeight="580.0" prefWidth="660.0" style="-fx-background-color: black">
     </GridPane>
-    <stylesheets>
-        <URL value="@Styles.css"/>
-    </stylesheets>
 </AnchorPane>

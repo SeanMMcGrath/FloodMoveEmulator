@@ -2,7 +2,6 @@ package edu.oswego;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -12,7 +11,6 @@ import javafx.scene.layout.*;
 import java.util.ArrayList;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.UnaryOperator;
 
 /**
@@ -104,6 +102,14 @@ public class Controller {
         startButton.setDisable(true);
         //disable generate button until run is done
         generateButton.setDisable(true);
+        moveCountLabel.setText("Moves: ");
+
+        //re-render grid from start
+        colorGrid.getChildren().clear();
+        renderGrid(origin);
+
+        backButton.setDisable(true);
+        forwardButton.setDisable(true);
 
         MAX_DEPTH = Integer.parseInt(depth.getText());
         this.p = Integer.parseInt(parallelism.getText());
@@ -117,10 +123,13 @@ public class Controller {
 
         Puzzle result = pool.invoke(r);
 
+        System.out.println("initial result, depth#" + result.depth);
+
         while (!result.isDone()){//while result is not final, keep pooling
             Runner tmpR = new Runner(result,  1);
             pool = new ForkJoinPool(this.p);
             result = pool.invoke(tmpR);
+            System.out.println("Result of depth: " + result.depth);
         }
 
         ArrayList<Puzzle> results = new ArrayList<>();
@@ -133,6 +142,7 @@ public class Controller {
         index = currentResults.size()-1;
 
         //allow new generations
+        startButton.setDisable(false);
         generateButton.setDisable(false);
         backButton.setDisable(false);
         forwardButton.setDisable(false);
